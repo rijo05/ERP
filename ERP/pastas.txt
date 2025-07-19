@@ -1,0 +1,26 @@
+Controllers		-		Recebe pedidos HTTP e devolve uma resposta
+						Nao contem logica, reencaminha para Application/Services
+
+
+Domain			-		Contem as regras de negocio e entities
+							/entities		- User, Product,...
+							/Interfaces		- IUserRepository
+							/ValueObjects	- Email, Money, Age,...
+
+
+Application		-		Logica da aplicacao
+							/Services		- Aplicam as regras de negocio
+							/DTOs			- Input/output dos Services
+
+
+Infrastructure	-		Integrar mundo exterior
+							enviar emails
+							ficheiros
+
+
+Persistence		-		Aceder a base de dados
+							DbContext do Entity Framework Core
+							Mapeamentos e configuração das entidades
+
+
+Configurations	-		Mantem o program.cs limpo
