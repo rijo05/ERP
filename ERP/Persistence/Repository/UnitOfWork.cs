@@ -1,16 +1,30 @@
 ﻿using ERP.Domain.Interfaces;
+using MediatR;
 
 namespace ERP.Persistence.Repository
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly AppDbContext _context;
+        private readonly IMediator _mediator;
 
-        public UnitOfWork(AppDbContext appDbContext) { _appDbContext = appDbContext; }
-            
-        public async Task SaveChangesAsync()
+        public UnitOfWork(AppDbContext context, IMediator mediator)
         {
-            await _appDbContext.SaveChangesAsync();
+            _context = context;
+            _mediator = mediator;
+        }
+
+        public async Task<int> CommitAsync()
+        {
+            var result = await _context.SaveChangesAsync();
+
+            var events = _context.GetAllDomainEvents();
+            _context.ClearAllDomainEvents();
+
+            foreach (var domainEvent in events)
+                await _mediator.Publish(domainEvent);
+
+            return result;
         }
     }
 }

@@ -24,3 +24,18 @@ Persistence		-		Aceder a base de dados
 
 
 Configurations	-		Mantem o program.cs limpo
+
+
+
+dotnet ef migrations add ProductInventory
+dotnet ef database update
+
+
+public class StockMovement
+{
+    public Guid Id { get; private set; }
+    public Guid ProductId { get; private set; }
+    public int Quantity { get; private set; }
+    public DateTime Date { get; private set; }
+    public StockMovementType Type { get; private set; } // Entrada ou Saída
+}

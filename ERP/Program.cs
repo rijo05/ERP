@@ -1,8 +1,21 @@
+using ERP.Application.DTOs.Category;
+using ERP.Application.DTOs.Product;
+using ERP.Application.DTOs.User;
+using ERP.Application.Events.Products;
+using ERP.Application.Interfaces;
+using ERP.Application.Mappers;
+using ERP.Application.Services;
+using ERP.Application.Validators.CategoryValidator;
+using ERP.Application.Validators.ProductValidator;
+using ERP.Application.Validators.UserValidator;
 using ERP.Domain.Entities;
 using ERP.Domain.Interfaces;
 using ERP.Domain.ValueObjects;
+using ERP.Middleware;
 using ERP.Persistence;
 using ERP.Persistence.Repository;
+using FluentValidation;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,19 +30,43 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//Cria a instância da ligação da BD a cada pedido HTTP
-builder.Services.AddScoped<AppDbContext>();
 
-//Se for pedido IUserRepository, UserRepository vai ser instanciado
+//Configurações do MediatR
+builder.Services.AddMediatR(typeof(ProductOutOfStockEvent).Assembly);
+
+//Repositorios
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-
-//mesma coisa mas genérico
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
+//helpers
+builder.Services.AddScoped<HateoasLinkService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+//User Service
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<UserMapper>();
+builder.Services.AddScoped<IValidator<CreateUserDTO> , CreateUserDTOValidator>();
+builder.Services.AddScoped<IValidator<UpdateUserDTO>, UpdateUserDTOValidator>();
+
+//Product Service
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ProductMapper>();
+builder.Services.AddScoped<IValidator<CreateProductDTO>, CreateProductDTOValidator>();
+builder.Services.AddScoped<IValidator<UpdateProductDTO>, UpdateProductDTOValidator>();
+builder.Services.AddScoped<IValidator<UpdateProductInventoryDTO>, UpdateProductInventoryDTOValidator>();
+
+//Category Service
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<CategoryMapper>();
+builder.Services.AddScoped<IValidator<CreateCategoryDTO>, CreateCategoryDTOValidator>();
+builder.Services.AddScoped<IValidator<UpdateCategoryDTO>, UpdateCategoryDTOValidator>();
+    
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -39,6 +76,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+//Utiliza o middleware custom para apanhar exceptions
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseAuthorization();
 

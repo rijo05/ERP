@@ -6,7 +6,7 @@ namespace ERP.Persistence.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private readonly AppDbContext _appDbContext;
+        protected readonly AppDbContext _appDbContext;
 
         public Repository(AppDbContext appDbContext)
         {

@@ -1,6 +1,8 @@
-﻿using ERP.Domain.Entities;
+﻿using ERP.Domain.Common;
+using ERP.Domain.Entities;
 using ERP.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ERP.Persistence
@@ -23,22 +25,66 @@ namespace ERP.Persistence
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<User>()
-                .Property(u => u.Email)
-                .HasConversion(v => v.Value, v => new Email(v))
-                .HasColumnName("Email")
-                .IsRequired();
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.OwnsOne(u => u.Email, email =>
+                {
+                    email.Property(e => e.Value)
+                        .HasColumnName("Email")
+                        .IsRequired();
+                });
+
+                entity.OwnsOne(u => u.Role, role =>
+                {
+                    role.Property(r => r.roleName)
+                        .HasConversion<string>()
+                        .HasColumnName("Role")
+                        .IsRequired();
+                });
+            });
 
             modelBuilder.Entity<Product>()
-                .Property(p => p.Price)
-                .HasConversion(v => v.Amount, v => new Price(v))     
-                .HasColumnName("Price")
-                .IsRequired();
+                .HasOne<Category>()
+                .WithMany()
+                .HasForeignKey(p => p.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<User>()
-                .Property(u => u.Role)
-                .HasConversion<string>()
-                .IsRequired();
+            //modelBuilder.Entity<Email>().ComplexProperty(v => v.Value);
+        }
+
+        public List<IDomainEvent> GetAllDomainEvents()
+        {
+            return ChangeTracker
+                .Entries<IHasDomainEvents>()
+                .SelectMany(e => e.Entity.DomainEvents)
+                .ToList();
+        }
+
+        public void ClearAllDomainEvents()
+        {
+            var domainEntities = ChangeTracker
+                .Entries<IHasDomainEvents>()
+                .Where(x => x.Entity.DomainEvents.Any())
+                .Select(x => x.Entity);
+
+            foreach (var entity in domainEntities)
+                entity.ClearDomainEvents();
+        }
+    }
+
+    public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+    {
+        public AppDbContext CreateDbContext(string[] args)
+        {
+            var config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+            optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+
+            return new AppDbContext(optionsBuilder.Options);
         }
     }
 }
