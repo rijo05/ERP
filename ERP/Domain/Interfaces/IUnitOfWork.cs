@@ -1,7 +1,6 @@
-﻿namespace ERP.Domain.Interfaces
+﻿namespace ERP.Domain.Interfaces;
+
+public interface IUnitOfWork
 {
-    public interface IUnitOfWork
-    {
-        Task<int> CommitAsync();
-    }
+    Task<int> CommitAsync();
 }

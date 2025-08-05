@@ -14,6 +14,7 @@ public class Product : IHasDomainEvents
     public bool IsActive { get; private set; }
     public Guid CategoryId { get; private set; }
     public int Stock { get; private set; }
+    public int ReservedStock { get; private set; }
     public int MinimumStockLevel { get; private set; }
 
 

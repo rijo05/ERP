@@ -5,6 +5,7 @@ namespace ERP.Domain.Entities;
 
 public class OrderItem
 {
+    public Guid OrderId { get; private set; }
     public Guid ReferenceId { get; private set; }
     public string Name { get; private set; }
     public decimal UnitPrice { get; private set; }
@@ -14,10 +15,11 @@ public class OrderItem
 
     private OrderItem() { }
 
-    public static OrderItem FromProduct(Product product, int quantity)
+    public static OrderItem FromProduct(Guid orderId, Product product, int quantity)
     {
         var orderItem = new OrderItem
         {
+            OrderId = orderId,
             ReferenceId = product.Id,
             Name = product.Name,
             UnitPrice = product.Price,
@@ -32,10 +34,11 @@ public class OrderItem
     //Passar o service completo ou apenas ID?
     //Service tem campo duration q n e usado aqui, importa?
     //TODO() - TOSEE()
-    public static OrderItem FromService(Service service, int quantity)
+    public static OrderItem FromService(Guid orderId, Service service, int quantity)
     {
         var orderItem = new OrderItem
         {
+            OrderId = orderId,
             ReferenceId = service.Id,
             Name = service.Name,
             UnitPrice = service.Price,
