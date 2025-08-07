@@ -14,8 +14,7 @@ public class OrderResponseDTO
     public DateTime LastUpdatedAt { get; init; }
     public DateTime? SubmittedAt { get; init; }
 
-    private readonly List<OrderItemResponseDTO> _items = new();
-    public IReadOnlyCollection<OrderItemResponseDTO> Items => _items.AsReadOnly();
+    public List<OrderItemResponseDTO> Items { get; init; }
 
-    public decimal TotalPrice => _items.Sum(x => x.Total);
+    public decimal TotalPrice => Items.Sum(x => x.Total);
 }
