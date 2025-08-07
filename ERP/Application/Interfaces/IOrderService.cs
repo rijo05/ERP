@@ -7,7 +7,7 @@ namespace ERP.Application.Interfaces;
 
 public interface IOrderService
 {
-    public Task<List<OrderResponseDTO>> GetAllOrdersAsync(); //trocar pelo filtered PROVAVELMENTE
+    public Task<List<OrderResponseDTO>> GetAllOrdersAsync();
     public Task<OrderResponseDTO> GetOrderByIdAsync(Guid id);
     public Task<List<OrderItemResponseDTO>> GetOrderItemsAsync(Guid id);
     public Task<List<OrderResponseDTO>> GetFilteredOrdersAsync(Order order); //OrderFilterDTO no futuro
