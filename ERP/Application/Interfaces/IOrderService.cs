@@ -13,7 +13,7 @@ public interface IOrderService
     public Task<List<OrderResponseDTO>> GetFilteredOrdersAsync(Order order); //OrderFilterDTO no futuro
     public Task<OrderResponseDTO> CreateOrderAsync(CreateOrderDTO orderDTO);
     public Task<OrderResponseDTO> SubmitOrderAsync(Guid id);
-    public Task<bool> CancelOrderAsync(Guid id);
+    public Task CancelOrderAsync(Guid id);
     public Task<OrderResponseDTO> CompleteOrderAsync(Guid orderId);
     public Task<OrderResponseDTO> InvoiceOrderAsync(Guid orderId);
     public Task<OrderResponseDTO> UpdateQuantityAsync(UpdateOrderItemDTO itemDTO);
