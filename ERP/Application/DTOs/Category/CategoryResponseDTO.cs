@@ -1,11 +1,10 @@
-﻿namespace ERP.Application.DTOs.Category
+﻿namespace ERP.Application.DTOs.Category;
+
+public class CategoryResponseDTO
 {
-    public class CategoryResponseDTO
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string? Description { get; set; }
-        public bool IsActive { get; set; }
-        public Dictionary<string, object> Links { get; set; }
-    }
+    public Guid Id { get; init; }
+    public string Name { get; init; }
+    public string? Description { get; init; }
+    public bool IsActive { get; init; }
+    public Dictionary<string, object> Links { get; init; }
 }

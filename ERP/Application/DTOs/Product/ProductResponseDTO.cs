@@ -1,15 +1,14 @@
-﻿namespace ERP.Application.DTOs.Product
+﻿namespace ERP.Application.DTOs.Product;
+
+public class ProductResponseDTO
 {
-    public class ProductResponseDTO
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string? Description { get; set; }
-        public decimal Price { get; set; }
-        public string CategoryId { get; set; }
-        public bool IsActive { get; set; }
-        public int Stock {  get; set; }
-        public int MinimumStockLevel { get; set; }
-        public Dictionary<string, object> Links { get; set; }
-    }
+    public Guid Id { get; init; }
+    public string Name { get; init; }
+    public string? Description { get; init; }
+    public decimal Price { get; init; }
+    public string CategoryId { get; init; }
+    public bool IsActive { get; init; }
+    public int Stock { get; init; }
+    public int MinimumStockLevel { get; init; }
+    public Dictionary<string, object> Links { get; init; }
 }
