@@ -1,4 +1,6 @@
-﻿using ERP.Application.Interfaces;
+﻿using ERP.Application.DTOs.Order;
+using ERP.Application.DTOs.OrderItems;
+using ERP.Application.Interfaces;
 using ERP.Domain.Entities;
 using ERP.Domain.Enums;
 using ERP.Domain.Interfaces;
@@ -13,68 +15,81 @@ public class OrderService : IOrderService
     {
         _orderRepository = orderRepository;
     }
-    public Task<OrderItem> AddItemAsync(Guid orderId, Guid itemId, int quantity, OrderItemType orderItemType)
+
+    #region GETs
+
+    public Task<List<OrderResponseDTO>> GetAllOrdersAsync()
     {
         throw new NotImplementedException();
     }
+
+    public Task<List<OrderResponseDTO>> GetFilteredOrdersAsync(Order order)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<OrderResponseDTO> GetOrderByIdAsync(Guid id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<List<OrderItemResponseDTO>> GetOrderItemsAsync(Guid id)
+    {
+        throw new NotImplementedException();
+    }
+
+    #endregion
+
+    #region CHANGE ORDER STATUS
 
     public Task<bool> CancelOrderAsync(Guid id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Order> CompleteOrderAsync(Guid orderId)
+    public Task<OrderResponseDTO> CompleteOrderAsync(Guid orderId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Order> CreateOrderAsync(Order order)
+    public Task<OrderResponseDTO> InvoiceOrderAsync(Guid orderId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<List<Order>> GetAllOrdersAsync()
+    public Task<OrderResponseDTO> SubmitOrderAsync(Guid id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<List<Order>> GetFilteredOrdersAsync(Order order)
+    #endregion
+
+    #region ADD, CREATE, REMOVE, UPDATES
+
+    public Task<OrderResponseDTO> CreateOrderAsync(CreateOrderDTO orderDTO)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Order> GetOrderByIdAsync(Guid id)
+    public Task<OrderResponseDTO> AddItemAsync(UpdateOrderItemDTO itemDTO)
     {
         throw new NotImplementedException();
     }
 
-    public Task<List<OrderItem>> GetOrderItemsAsync(Guid id)
+    public Task RemoveItemAsync(UpdateOrderItemDTO itemDTO)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Order> InvoiceOrderAsync(Guid orderId)
+    public Task<OrderResponseDTO> UpdateQuantityAsync(UpdateOrderItemDTO itemDTO)
     {
         throw new NotImplementedException();
     }
 
-    public Task RemoveItemAsync(Guid orderId, Guid itemId, OrderItemType orderItemType)
+    public Task<OrderResponseDTO> UpdateOrderAsync(Guid orderId, Order order)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Order> SubmitOrderAsync(Guid id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Order> UpdateOrderAsync(Guid orderId, Order order)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<OrderItem> UpdateQuantityAsync(Guid orderId, Guid itemId, int quantity, OrderItemType orderItemType)
-    {
-        throw new NotImplementedException();
-    }
+    #endregion
 }
