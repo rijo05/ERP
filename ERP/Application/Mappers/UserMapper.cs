@@ -6,57 +6,56 @@ using ERP.Domain.ValueObjects;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http;
 
-namespace ERP.Application.Mappers
+namespace ERP.Application.Mappers;
+
+public class UserMapper
 {
-    public class UserMapper
+    private readonly HateoasLinkService _hateoasLinkService;
+
+    public UserMapper(HateoasLinkService hateoasLinkService)
     {
-        private readonly HateoasLinkService _hateoasLinkService;
+        _hateoasLinkService = hateoasLinkService;
+    }
 
-        public UserMapper(HateoasLinkService hateoasLinkService)
+    public UserResponseDTO ToUserResponseDTO(User user)
+    {
+        return new UserResponseDTO
         {
-            _hateoasLinkService = hateoasLinkService;
-        }
+            Id = user.Id,
+            Name = user.Name,
+            Email = user.Email.Value,
+            Role = user.Role.ToString(),
+            CanDelete = CanDelete(user.Role),
+            CanEditOwnProfile = CanEditOwnProfile(user.Role),
+            IsActive = user.IsActive,
+            Links = GenerateLinks(user)
+        };
+    }
 
-        public UserResponseDTO ToUserResponseDTO(User user)
-        {
-            return new UserResponseDTO
-            {
-                Id = user.Id,
-                Name = user.Name,
-                Email = user.Email.Value,
-                Role = user.Role.ToString(),
-                CanDelete = CanDelete(user.Role),
-                CanEditOwnProfile = CanEditOwnProfile(user.Role),
-                IsActive = user.IsActive,
-                Links = GenerateLinks(user)
-            };
-        }
-
-        public List<UserResponseDTO> ToUserResponseDTOList(List<User> users)
-        {
-            return users.Select(x => ToUserResponseDTO(x)).ToList();
-        }
+    public List<UserResponseDTO> ToUserResponseDTOList(List<User> users)
+    {
+        return users.Select(x => ToUserResponseDTO(x)).ToList();
+    }
 
 
-        private bool CanDelete(Role role)
-        {
-            return role.roleName == RoleType.Admin;
-        }
+    private bool CanDelete(Role role)
+    {
+        return role.roleName == RoleType.Admin;
+    }
 
-        private bool CanEditOwnProfile(Role role)
-        {
-            return true;
-        }
+    private bool CanEditOwnProfile(Role role)
+    {
+        return true;
+    }
 
-        private Dictionary<string, object> GenerateLinks(User user)
-        {
-            return _hateoasLinkService.GenerateLinks(
-                        user.Id,
-                        "Users",
-                        "GetById",
-                        "Update",
-                        "Delete"
-            );
-        }
+    private Dictionary<string, object> GenerateLinks(User user)
+    {
+        return _hateoasLinkService.GenerateLinksCRUD(
+                    user.Id,
+                    "Users",
+                    "GetById",
+                    "Update",
+                    "Delete"
+        );
     }
 }
