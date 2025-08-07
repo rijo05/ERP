@@ -62,8 +62,8 @@ public class Order
         //quando ]e q uma order fica completed?
         //se so mexer no stock no complete como resolver conflitos de stock no submitted
         //TODO() - TOSEE()
-        if (OrderStatus == OrderStatus.Completed || OrderStatus == OrderStatus.Invoiced)
-            throw new Exception("Cant cancel a completed order");
+        if (OrderStatus == OrderStatus.Completed || OrderStatus == OrderStatus.Invoiced || OrderStatus == OrderStatus.Cancelled)
+            throw new Exception($"Cant cancel a {this.OrderStatus} order");
 
         OrderStatus = OrderStatus.Cancelled;
         LastUpdatedAt = DateTime.UtcNow;
@@ -73,6 +73,9 @@ public class Order
     {
         if (!_items.Any())
             throw new Exception("Cant submit an order without items");
+
+        if (OrderStatus != OrderStatus.Draft)
+            throw new Exception("Cant submit an order that isnt a draft");
 
         OrderStatus = OrderStatus.Submitted;
         LastUpdatedAt = DateTime.UtcNow;

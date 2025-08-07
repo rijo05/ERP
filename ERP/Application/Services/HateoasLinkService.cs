@@ -11,7 +11,7 @@ public class HateoasLinkService
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public Dictionary<string, object> GenerateLinks(Guid id, string controllerName, string getAction, string updateAction, string deleteAction)
+    public Dictionary<string, object> GenerateLinksCRUD(Guid id, string controllerName, string getAction, string updateAction, string deleteAction)
     {
         var httpContext = _httpContextAccessor.HttpContext;
 
