@@ -37,10 +37,5 @@ namespace ERP.Persistence.Repository
         {
             _appDbContext.Set<T>().Update(entity);
         }
-
-        public async Task<bool> CheckIfExistsAsync(Guid id)
-        {
-            return await _appDbContext.Set<T>().AnyAsync(x => EF.Property<Guid>(x, "Id") == id);
-        }
     }
 }
