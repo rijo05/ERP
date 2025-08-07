@@ -1,4 +1,4 @@
-﻿using ERP.Application.DTOs.Product;
+﻿    using ERP.Application.DTOs.Product;
 using ERP.Application.DTOs.User;
 using ERP.Application.Interfaces;
 using ERP.Application.Mappers;
@@ -48,18 +48,27 @@ public class UserService : IUserService
     public async Task<UserResponseDTO?> GetUserByEmailAsync(Email email)
     {
         var user = await _userRepository.GetByEmailAsync(email);
-        return user is null ? null : _Usermapper.ToUserResponseDTO(user);
+
+        if (user is null)
+            throw new Exception($"User with {email.Value} email not found");
+
+        return _Usermapper.ToUserResponseDTO(user);
     }
 
     public async Task<UserResponseDTO?> GetUserByIdAsync(Guid id)
     {
-        var user =  await _userRepository.GetByIdAsync(id);
-        return user is null ? null : _Usermapper.ToUserResponseDTO(user);
+        var user =  await EnsureUserExists(id);
+
+        return _Usermapper.ToUserResponseDTO(user);
     }
 
     public async Task<List<UserResponseDTO>> GetUsersByNameAsync(string name)
     {
         var users =  await _userRepository.GetByNameAsync(name);
+
+        if (users.Count == 0)
+            throw new Exception($"No users found with name '{name}'.");
+
         return _Usermapper.ToUserResponseDTOList(users);
     }
 

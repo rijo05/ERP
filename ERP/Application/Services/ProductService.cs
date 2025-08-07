@@ -59,12 +59,20 @@ public class ProductService : IProductService
     public async Task<ProductResponseDTO?> GetProductByIdAsync(Guid id)
     {
         var product = await _productRepository.GetByIdAsync(id);
-        return product is null ? null : _productMapper.ToProductResponseDTO(product);
+
+        if (product is null)
+            throw new Exception("Product not found");
+
+        return _productMapper.ToProductResponseDTO(product);
     }
 
     public async Task<List<ProductResponseDTO>> GetProductsByNameAsync(string name)
     {
         var products = await _productRepository.GetByNameAsync(name);
+
+        if (products.Count == 0)
+            throw new Exception($"No products found with name '{name}'.");
+
         return _productMapper.ToProductResponseDTOList(products);
     }
 

@@ -39,8 +39,6 @@ public class ProductsController : ControllerBase
     public async Task<ActionResult<ProductResponseDTO>> GetById(Guid id)
     {
         var product = await _productService.GetProductByIdAsync(id);
-        if (product is null)
-            return NotFound($"Product with ID '{id}' not found.");
 
         return Ok(product);
     }
@@ -52,8 +50,6 @@ public class ProductsController : ControllerBase
             return BadRequest("Name parameter is required.");
 
         var products = await _productService.GetProductsByNameAsync(name);
-        if (products.Count == 0)
-            return NotFound($"No products found with name '{name}'.");
 
         return Ok(products);
     }

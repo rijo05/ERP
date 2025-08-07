@@ -40,13 +40,21 @@ public class CategoryService : ICategoryService
     public async Task<List<CategoryResponseDTO>> GetCategoriesByNameAsync(string name)
     {
         var categories = await _categoryRepository.GetByNameAsync(name);
+
+        if (categories.Count == 0)
+            throw new Exception($"No Category found with name '{name}'.");
+
         return _categoryMapper.ToCategoryResponseDTOList(categories);
     }
 
     public async Task<CategoryResponseDTO?> GetCategoryByIdAsync(Guid id)
     {
         var category = await _categoryRepository.GetByIdAsync(id);
-        return category is null ? null : _categoryMapper.ToCategoryResponseDTO(category);
+
+        if (category is null)
+            throw new Exception($"Category with ID '{id}' not found.");
+
+        return _categoryMapper.ToCategoryResponseDTO(category);
     }
 
     public async Task<CategoryResponseDTO> AddCategoryAsync(CreateCategoryDTO categoryDTO)

@@ -28,8 +28,6 @@ public class CategoriesController : ControllerBase
     public async Task<ActionResult<CategoryResponseDTO>> GetById(Guid id)
     {
         var category = await _categoryService.GetCategoryByIdAsync(id);
-        if (category is null)
-            return NotFound($"Category with ID '{id}' not found.");
 
         return Ok(category);
     }
@@ -41,8 +39,6 @@ public class CategoriesController : ControllerBase
             return BadRequest("Name parameter is required.");
 
         var categories = await _categoryService.GetCategoriesByNameAsync(name);
-        if (categories.Count == 0)
-            return NotFound($"No Category found with name '{name}'.");
 
         return Ok(categories);
     }

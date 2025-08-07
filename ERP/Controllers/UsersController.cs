@@ -41,8 +41,6 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<UserResponseDTO>> GetById(Guid id)
     {
         var user = await _userService.GetUserByIdAsync(id);
-        if (user is null)
-            return NotFound($"User with ID '{id}' not found.");
 
         return Ok(user);
     }
@@ -50,12 +48,7 @@ public class UsersController : ControllerBase
     [HttpGet("email/{email}")]
     public async Task<ActionResult<UserResponseDTO>> GetByEmail(string email)
     {
-        if (string.IsNullOrWhiteSpace(email))
-            return BadRequest("Email is required.");
-
         var user = await _userService.GetUserByEmailAsync(new Email(email));
-        if (user is null)
-            return NotFound($"User with email '{email}' not found.");
 
         return Ok(user);
     }
@@ -67,8 +60,6 @@ public class UsersController : ControllerBase
             return BadRequest("Name parameter is required.");
 
         var users = await _userService.GetUsersByNameAsync(name);
-        if (users.Count == 0)
-            return NotFound($"No users found with name '{name}'.");
 
         return Ok(users);
     }
